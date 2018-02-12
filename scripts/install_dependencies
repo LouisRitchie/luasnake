@@ -11,4 +11,4 @@ cd LuaJIT-2.0.5
 make && sudo make install
 
 # install http library
-sudo luarocks install http
+sudo luarocks install http lua-cjson

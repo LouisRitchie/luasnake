@@ -1,20 +1,22 @@
 http_server = require "http.server"
 http_headers = require "http.headers"
+json = require "cjson"
 
 function reply(myserver, stream) -- luacheck: ignore 212
 	-- Read in headers
 	local req_headers = assert(stream:get_headers())
 	local req_method = req_headers:get ":method"
+  local req_body = assert(json.decode(stream:get_body_as_string()))
 
 	-- Log request to stdout
-	assert(io.stdout:write(string.format('[%s] "%s %s HTTP/%g"  "%s" "%s"\n',
+	assert(io.stdout:write(string.format('[%s] %s %s \nBODY: %s\n',
 		os.date("%d/%b/%Y:%H:%M:%S %z"),
 		req_method or "",
 		req_headers:get(":path") or "",
-		stream.connection.version,
-		req_headers:get("referer") or "-",
-		req_headers:get("user-agent") or "-"
+    req_body.unpack() or "NO BODY"
 	)))
+
+  print(tostring(json.decode(req_body)))
 
 	-- Build response headers
 	local res_headers = http_headers.new()
