@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# install dependencies
+sudo apt update
+sudo apt install libssl-dev make m4 gcc luarocks
+
+# install luajit
+wget http://luajit.org/download/LuaJIT-2.0.5.zip
+unzip LuaJIT-2.0.5.zip
+cd LuaJIT-2.0.5
+make && sudo make install
+
+# install http library
+sudo luarocks install http
