@@ -2,6 +2,7 @@ http_server = require "http.server"
 http_headers = require "http.headers"
 json = require "cjson"
 config = require "config"
+tools = require "tools"
 
 function reply(myserver, stream) -- luacheck: ignore 212
 	-- Read in headers
@@ -10,12 +11,13 @@ function reply(myserver, stream) -- luacheck: ignore 212
   local req_body = assert(json.decode(stream:get_body_as_string()))
 
 	-- Log request to stdout
-	assert(io.stdout:write(string.format('[%s] %s %s \nBODY: %s\n',
+	assert(io.stdout:write(string.format("[%s] %s %s\n",
 		os.date("%d/%b/%Y:%H:%M:%S %z"),
 		req_method or "",
-		req_headers:get(":path") or "",
-    req_body or "NO BODY"
+		req_headers:get(":path") or ""
 	)))
+
+  tools.print_table(req_body)
 
 	-- Build response headers
 	local res_headers = http_headers.new()
@@ -24,7 +26,7 @@ function reply(myserver, stream) -- luacheck: ignore 212
 	-- Send headers to client; end the stream immediately if this was a HEAD request
 	assert(stream:write_headers(res_headers, req_method == "HEAD"))
 	if req_method ~= "HEAD" then
-		assert(stream:write_chunk(config.getSnakeJSON(), true))
+		assert(stream:write_chunk(config.get_snake_JSON(), true))
 	end
 end
 
