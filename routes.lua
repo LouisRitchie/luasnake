@@ -1,23 +1,25 @@
-tools = require "tools"
-config = require "config"
+tools = require 'tools'
+config = require 'config'
+Board = require 'board'
 
 local routes = {}
 
 function routes.start(body)
   return {
     body = config.get_snake_JSON(),
-    status = "200"
+    status = '200'
   }
 end
 
 function routes.move(body)
-  tools.print_table(body)
+  board = Board:new(body)
+  board:print()
 
   return {
     body = json.encode({
-      move = "up"  
+      move = 'up'
     }),
-    status = "200"
+    status = '200'
   }
 end
 

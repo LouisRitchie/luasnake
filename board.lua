@@ -11,17 +11,18 @@ The board shall be a 2d array of integers
 
 --]]
 
-local board = {}
-local width
+local Board = {}
 
-function constructor(body)
-  width = body.width
+-- constructor function.
+function Board:new(body)
+  self.width = body.width
+  self.board = {}
 
   -- initialize board
-  for i=0, width do
-    board[i] = {}
-    for j=0, width do
-      board[i][j] = 0
+  for i=0, self.width do
+    self.board[i] = {}
+    for j=0, self.width do
+      self.board[i][j] = 0
     end
   end
 
@@ -31,9 +32,9 @@ function constructor(body)
       local snake = body.snakes.data[i].body.data[j]
 
       if j == 1 then
-        board[snake.y][snake.x] = 3
+        self.board[snake.y][snake.x] = 3
       else
-        board[snake.y][snake.x] = 2
+        self.board[snake.y][snake.x] = 2
       end
     end
   end
@@ -43,18 +44,24 @@ function constructor(body)
     local food = body.food.data[i]
     tools.print_table(food)
 
-    board[food.y][food.x] = 1
-    board[food.y][food.x] = 1
+    self.board[food.y][food.x] = 1
+    self.board[food.y][food.x] = 1
   end
+
+  return self
 end
 
-function print_board()
+function Board:print(print_zeroes)
   local output = ''
   local row_string = ''
-  for i=0, width do
+  for i=0, self.width do
     row_string = ''
-    for j=0, width do
-      row_string = row_string .. board[i][j] .. ' '
+    for j=0, self.width do
+      if (not print_zeroes and self.board[i][j] == 0) then
+        row_string = row_string .. '  '
+      else
+        row_string = row_string .. self.board[i][j] .. ' '
+      end
     end
     output = output .. '\n' .. row_string
   end
@@ -108,6 +115,4 @@ local sample_board = {
   };
 }
 
-constructor(sample_board)
-
-print_board()
+return Board
