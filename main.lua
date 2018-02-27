@@ -8,6 +8,7 @@ function reply(myserver, stream) -- luacheck: ignore 212
   local request = tools.get_request(stream)
   tools.print_request(request)
   local response = assert(routes[request.path](request.body))
+  print('I am responding with ' .. response.body)
 
   -- Set up headers
 	local res_headers = http_headers.new()
